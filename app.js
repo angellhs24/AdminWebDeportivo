@@ -1,3 +1,15 @@
+// EL GUARDIA: Si no hay sesión, patitas para afuera
+if (sessionStorage.getItem('sesion_activa') !== 'true') {
+    window.location.href = 'login.html';
+}
+
+// Botón de Cerrar Sesión (Opcional pero recomendado)
+function cerrarSesion() {
+    sessionStorage.removeItem('sesion_activa');
+    window.location.href = 'login.html';
+}
+
+
 // 1. CONFIGURACIÓN DE CONEXIÓN (Tus llaves reales)
 const URL_PROYECTO = 'https://rvbjdtqjlznshijyfacv.supabase.co';
 const LLAVE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2YmpkdHFqbHpuc2hpanlmYWN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNzA3NzAsImV4cCI6MjA5MDc0Njc3MH0.-wa0UpyQZBJ2uZVp0qhwcGD30OVhZxRLRO5JpLJuAWQ';
