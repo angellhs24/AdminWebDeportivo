@@ -1,11 +1,9 @@
-// 1. CONFIGURACIÓN (Tus llaves reales)
 const URL_PROYECTO = 'https://rvbjdtqjlznshijyfacv.supabase.co';
 const LLAVE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2YmpkdHFqbHpuc2hpanlmYWN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNzA3NzAsImV4cCI6MjA5MDc0Njc3MH0.-wa0UpyQZBJ2uZVp0qhwcGD30OVhZxRLRO5JpLJuAWQ';
 
 const _supabase = supabase.createClient(URL_PROYECTO, LLAVE_ANON);
 
-// 2. EL GUARDIA (Seguridad)
-// Si no hay sesión activa, redirige al login
+// GUARDIA DE SEGURIDAD
 if (sessionStorage.getItem('sesion_activa') !== 'true') {
     window.location.href = 'login.html';
 }
@@ -15,107 +13,108 @@ function cerrarSesion() {
     window.location.href = 'login.html';
 }
 
-// 3. NAVEGACIÓN ENTRE SECCIONES
+// NAVEGACIÓN
 function showSection(sectionId) {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-    
     document.getElementById(sectionId).classList.add('active');
-    // Marcamos el botón actual como activo
     event.currentTarget.classList.add('active');
 
-    // Cargar datos automáticamente al entrar a la sección
-    if(sectionId === 'partidos') cargarPartidos();
+    if(sectionId === 'partidos') cargarPartidosOrganizados();
     if(sectionId === 'sanciones') cargarSanciones();
     if(sectionId === 'anuncios') cargarAnuncios();
 }
 
-// ==========================================
-// 4. SECCIÓN PARTIDOS
-// ==========================================
-
-// Guardar Partido
+// --- GESTIÓN DE PARTIDOS ---
 document.getElementById('btn-guardar-partido').addEventListener('click', async () => {
+    const btn = document.getElementById('btn-guardar-partido');
+    btn.innerText = "PROCESANDO...";
+
     const datos = {
         Local: document.getElementById('local').value,
         Visita: document.getElementById('visita').value,
         Cancha: document.getElementById('cancha').value,
         Hora: document.getElementById('hora').value,
         Dia: document.getElementById('dia').value,
-        Tipo: 'CAMP', 
-        Cat: 'Varonil'
+        Tipo: 'CAMP'
     };
 
     const { error } = await _supabase.from('Partidos').insert([datos]);
-    if (error) alert("Error: " + error.message);
-    else { 
-        alert("¡Partido guardado!"); 
-        cargarPartidos();
-        // Limpiar campos
-        document.getElementById('local').value = "";
-        document.getElementById('visita').value = "";
+    
+    if (error) {
+        alert("Error: " + error.message);
+    } else {
+        btn.innerText = "¡GUARDADO!";
+        setTimeout(() => btn.innerText = "GUARDAR EN CALENDARIO", 2000);
+        cargarPartidosOrganizados();
     }
 });
 
-// Cargar Lista de Partidos
-async function cargarPartidos() {
-    const lista = document.getElementById('lista-partidos');
-    lista.innerHTML = "<p>Cargando jornada...</p>";
-    
-    const { data, error } = await _supabase.from('Partidos').select('*').order('id', { ascending: false });
-    
+async function cargarPartidosOrganizados() {
+    const contenedor = document.getElementById('jornada-organizada');
+    contenedor.innerHTML = "Consultando base de datos...";
+
+    const { data, error } = await _supabase.from('Partidos').select('*').order('Hora', { ascending: true });
+
     if (error) return;
-    lista.innerHTML = "";
-    data.forEach(p => {
-        lista.innerHTML += `
-            <div class="item-lista">
-                <span><b>${p.Local} vs ${p.Visita}</b> | ${p.Dia} (${p.Hora})</span>
-                <button class="btn-danger" onclick="borrarPartido(${p.id})">Eliminar</button>
-            </div>
-        `;
+
+    contenedor.innerHTML = "";
+    const dias = ["Sábado", "Domingo"];
+    const canchas = ["Central", "1", "2", "3", "4", "5", "6", "7"];
+
+    dias.forEach(dia => {
+        const partidosDelDia = data.filter(p => p.Dia === dia);
+        if (partidosDelDia.length > 0) {
+            contenedor.innerHTML += `<div class="dia-header">${dia.toUpperCase()}</div>`;
+            
+            canchas.forEach(cancha => {
+                const partidosCancha = partidosDelDia.filter(p => p.Cancha === cancha);
+                if (partidosCancha.length > 0) {
+                    contenedor.innerHTML += `<div class="cancha-group"><div class="cancha-title">Cancha ${cancha}</div>`;
+                    partidosCancha.forEach(p => {
+                        contenedor.innerHTML += `
+                            <div class="match-row">
+                                <span><b>${p.Hora}</b> | ${p.Local} vs ${p.Visita}</span>
+                                <button class="btn-delete" onclick="borrarPartido(${p.id})">X</button>
+                            </div>
+                        `;
+                    });
+                    contenedor.innerHTML += `</div>`;
+                }
+            });
+        }
     });
 }
 
 async function borrarPartido(id) {
-    if(confirm("¿Borrar este partido?")) {
+    if(confirm("¿Eliminar este partido del rol?")) {
         await _supabase.from('Partidos').delete().eq('id', id);
-        cargarPartidos();
+        cargarPartidosOrganizados();
     }
 }
 
 async function limpiarJornada() {
-    if(confirm("⚠ ¿BORRAR TODA LA JORNADA?")) {
+    if(confirm("⚠ ESTO BORRARÁ TODOS LOS PARTIDOS DE LA SEMANA. ¿Continuar?")) {
         await _supabase.from('Partidos').delete().neq('id', 0);
-        cargarPartidos();
+        cargarPartidosOrganizados();
     }
 }
 
-// ==========================================
-// 5. SECCIÓN ANUNCIOS
-// ==========================================
-
+// --- ANUNCIOS Y SANCIONES (Lógica similar) ---
 async function guardarAviso() {
-    const titulo = document.getElementById('titulo-aviso').value;
-    const contenido = document.getElementById('contenido-aviso').value;
-
-    const { error } = await _supabase.from('anuncios').insert([{ Titulo: titulo, Contenido: contenido }]);
-    if (error) alert("Error: " + error.message);
-    else { 
-        alert("Anuncio publicado");
-        cargarAnuncios();
-    }
+    const { error } = await _supabase.from('anuncios').insert([{ 
+        Titulo: document.getElementById('titulo-aviso').value, 
+        Contenido: document.getElementById('contenido-aviso').value 
+    }]);
+    if(!error) cargarAnuncios();
 }
 
 async function cargarAnuncios() {
-    const div = document.getElementById('lista-anuncios');
     const { data } = await _supabase.from('anuncios').select('*').order('id', { ascending: false });
+    const div = document.getElementById('lista-anuncios');
     div.innerHTML = "";
     data?.forEach(a => {
-        div.innerHTML += `
-            <div class="item-lista">
-                <span><b>${a.Titulo}</b></span>
-                <button class="btn-danger" onclick="borrarAnuncio(${a.id})">Quitar</button>
-            </div>`;
+        div.innerHTML += `<div class="match-row"><span>${a.Titulo}</span><button class="btn-delete" onclick="borrarAnuncio(${a.id})">Eliminar</button></div>`;
     });
 }
 
@@ -124,35 +123,22 @@ async function borrarAnuncio(id) {
     cargarAnuncios();
 }
 
-// ==========================================
-// 6. SECCIÓN SANCIONES
-// ==========================================
-
+// Lógica de Sanciones
 async function guardarSancion() {
-    const datos = {
-        Jugador: document.getElementById('jugador-san').value,
+    const { error } = await _supabase.from('sanciones').insert([{ 
+        Jugador: document.getElementById('jugador-san').value, 
         Equipo: document.getElementById('equipo-san').value,
         Motivo: document.getElementById('motivo-san').value
-    };
-
-    const { error } = await _supabase.from('sanciones').insert([datos]);
-    if (error) alert("Error: " + error.message);
-    else { 
-        alert("Sanción registrada");
-        cargarSanciones();
-    }
+    }]);
+    if(!error) cargarSanciones();
 }
 
 async function cargarSanciones() {
-    const div = document.getElementById('lista-sanciones');
     const { data } = await _supabase.from('sanciones').select('*').order('id', { ascending: false });
+    const div = document.getElementById('lista-sanciones');
     div.innerHTML = "";
     data?.forEach(s => {
-        div.innerHTML += `
-            <div class="item-lista">
-                <span><b>${s.Jugador}</b> (${s.Equipo}) - ${s.Motivo}</span>
-                <button class="btn-danger" onclick="borrarSancion(${s.id})">Borrar</button>
-            </div>`;
+        div.innerHTML += `<div class="match-row"><span><b>${s.Jugador}</b> (${s.Equipo}) - ${s.Motivo}</span><button class="btn-delete" onclick="borrarSancion(${s.id})">X</button></div>`;
     });
 }
 
@@ -160,4 +146,3 @@ async function borrarSancion(id) {
     await _supabase.from('sanciones').delete().eq('id', id);
     cargarSanciones();
 }
-
