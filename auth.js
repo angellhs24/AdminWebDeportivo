@@ -6,30 +6,32 @@ const _supabase = supabase.createClient(URL_PROYECTO, LLAVE_ANON);
 document.getElementById('login-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    const user = document.getElementById('user').value;
-    const pass = document.getElementById('pass').value;
+    const userField = document.getElementById('user').value.trim(); // .trim() quita espacios accidentales
+    const passField = document.getElementById('pass').value.trim();
     const errorDiv = document.getElementById('error');
 
-    // Consultamos la tabla Usuarios
+    console.log("Intentando entrar con:", userField);
+
+    // Buscamos en la tabla Usuarios
     const { data, error } = await _supabase
         .from('usuarios')
         .select('*')
-        .eq('usuario', user)
-        .eq('contrasena', pass)
-        .single(); // Esperamos solo un resultado
+        .eq('usuario', userField)
+        .eq('contrasena', passField);
 
-    if (data) {
-        // ¡ÉXITO! Guardamos en la memoria del navegador que ya entró
+    // Si data tiene algo (es decir, encontró al menos 1 fila)
+    if (data && data.length > 0) {
+        console.log("¡Usuario encontrado!");
         sessionStorage.setItem('sesion_activa', 'true');
-        window.location.href = 'index.html'; // Aquí mandamos al index
+        window.location.href = 'index.html'; 
     } else {
+        console.log("No se encontró el usuario o la contraseña falló");
         errorDiv.style.display = 'block';
-        // Animación de sacudida si falla
-        document.querySelector('.login-card').animate([
-            { transform: 'translateX(0)' },
-            { transform: 'translateX(-10px)' },
-            { transform: 'translateX(10px)' },
-            { transform: 'translateX(0)' }
-        ], { duration: 300 });
+        
+        // Animación de error
+        document.querySelector('.login-card').classList.add('shake');
+        setTimeout(() => document.querySelector('.login-card').classList.remove('shake'), 500);
     }
+
+    if (error) console.error("Error de Supabase:", error);
 });
