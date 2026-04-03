@@ -1,79 +1,81 @@
-// EL GUARDIA: Si no hay sesión, patitas para afuera
+// --- CONFIGURACIÓN ---
+const URL_PROYECTO = 'https://rvbjdtqjlznshijyfacv.supabase.co';
+const LLAVE_ANON = 'EyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // Pon tu llave completa aquí
+const _supabase = supabase.createClient(URL_PROYECTO, LLAVE_ANON);
+
+// --- 1. EL GUARDIA ---
 if (sessionStorage.getItem('sesion_activa') !== 'true') {
     window.location.href = 'login.html';
 }
 
-// Botón de Cerrar Sesión (Opcional pero recomendado)
 function cerrarSesion() {
     sessionStorage.removeItem('sesion_activa');
     window.location.href = 'login.html';
 }
 
+// --- 2. NAVEGACIÓN ---
+function showSection(sectionId) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    
+    document.getElementById(sectionId).classList.add('active');
+    event.currentTarget.classList.add('active');
 
-// 1. CONFIGURACIÓN DE CONEXIÓN (Tus llaves reales)
-const URL_PROYECTO = 'https://rvbjdtqjlznshijyfacv.supabase.co';
-const LLAVE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2YmpkdHFqbHpuc2hpanlmYWN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNzA3NzAsImV4cCI6MjA5MDc0Njc3MH0.-wa0UpyQZBJ2uZVp0qhwcGD30OVhZxRLRO5JpLJuAWQ';
+    // Cargar datos automáticamente al abrir sección
+    if(sectionId === 'partidos') cargarPartidos();
+    if(sectionId === 'sanciones') cargarSanciones();
+}
 
-// 2. INICIALIZAR EL CLIENTE DE SUPABASE
-const _supabase = supabase.createClient(URL_PROYECTO, LLAVE_ANON);
+// --- 3. LÓGICA DE PARTIDOS ---
 
-// 3. ESCUCHAR EL EVENTO DE ENVÍO DEL FORMULARIO
-document.getElementById('form-partido').addEventListener('submit', async (e) => {
-    e.preventDefault(); // Evita que la página se recargue
-
-    // 4. CAPTURAR LOS DATOS (Asegúrate que los ID en el HTML coincidan)
-    const datosParaEnviar = {
+// Guardar
+document.getElementById('btn-guardar-partido').addEventListener('click', async () => {
+    const datos = {
         Local: document.getElementById('local').value,
         Visita: document.getElementById('visita').value,
         Cancha: document.getElementById('cancha').value,
         Hora: document.getElementById('hora').value,
         Dia: document.getElementById('dia').value,
-        Tipo: 'CAMP',       // Valor por defecto para Campeonato
-        Cat: 'Varonil'      // Valor por defecto para Categoría
+        Tipo: 'CAMP', Cat: 'Varonil'
     };
 
-    console.log("Enviando datos a Supabase...", datosParaEnviar);
-
-    // 5. INSERTAR EN LA TABLA "Partidos" (Con P mayúscula)
-    const { data, error } = await _supabase
-        .from('Partidos') 
-        .insert([datosParaEnviar]);
-
-    // 6. RESPUESTA AL USUARIO
-    if (error) {
-        console.error("Error detallado:", error);
-        alert("Error de Supabase: " + error.message);
-    } else {
-        alert("¡ÉXITO! El partido se guardó correctamente en la nube.");
-        document.getElementById('form-partido').reset(); // Limpia el formulario
-    }
+    const { error } = await _supabase.from('Partidos').insert([datos]);
+    if (error) alert("Error: " + error.message);
+    else { alert("Guardado!"); cargarPartidos(); }
 });
 
-// BORRAR UN PARTIDO POR ID
-async function eliminarPartido(id) {
-    const { error } = await _supabase
-        .from('Partidos')
-        .delete()
-        .eq('id', id); // 'eq' significa "igual a"
+// Leer y mostrar con botón de borrar
+async function cargarPartidos() {
+    const lista = document.getElementById('lista-partidos');
+    lista.innerHTML = "Cargando...";
+    
+    const { data, error } = await _supabase.from('Partidos').select('*').order('id', { ascending: false });
+    
+    lista.innerHTML = "";
+    data.forEach(p => {
+        lista.innerHTML += `
+            <div class="item-lista">
+                <span><b>${p.Local} vs ${p.Visita}</b> - ${p.Dia} (${p.Hora})</span>
+                <button class="btn-danger" onclick="borrarPartido(${p.id})">Eliminar</button>
+            </div>
+        `;
+    });
+}
 
-    if (error) {
-        alert("No se pudo borrar: " + error.message);
-    } else {
-        alert("Partido eliminado correctamente");
-        location.reload(); // Recarga para que ya no se vea en la lista
+async function borrarPartido(id) {
+    if(confirm("¿Borrar este partido?")) {
+        await _supabase.from('Partidos').delete().eq('id', id);
+        cargarPartidos();
     }
 }
 
-// BORRAR TODO (CUIDADO: Esto limpia la tabla completa)
-async function limpiarTodaLaTabla() {
-    const confirmar = confirm("¿Estás seguro de borrar TODA la jornada?");
-    if (confirmar) {
-        const { error } = await _supabase
-            .from('Partidos')
-            .delete()
-            .neq('id', 0); // Borra todo lo que NO tenga ID 0 (o sea, todo)
-
-        alert("Jornada limpiada");
+async function limpiarJornada() {
+    if(confirm("⚠ ESTO BORRARÁ TODOS LOS PARTIDOS. ¿Continuar?")) {
+        await _supabase.from('Partidos').delete().neq('id', 0);
+        cargarPartidos();
     }
 }
 
+// --- NOTA ---
+// Deberás repetir la lógica de cargarPartidos para Sanciones y Anuncios 
+// creando las tablas 'sanciones' y 'anuncios' en Supabase.
