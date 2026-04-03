@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SIERRA JUÁREZ HQ | Basketball Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
@@ -16,110 +16,124 @@
 
         body { font-family: 'Inter', sans-serif; background: var(--bg-body); color: white; margin: 0; display: flex; height: 100vh; overflow: hidden; }
 
-        /* --- NAVEGACIÓN --- */
-        nav { width: 280px; background: #000; border-right: 2px solid var(--espn-red); display: flex; flex-direction: column; padding: 30px; box-sizing: border-box; }
+        /* --- NAVEGACIÓN RESPONSIVA --- */
+        nav { width: 280px; background: #000; border-right: 2px solid var(--espn-red); display: flex; flex-direction: column; padding: 30px; box-sizing: border-box; transition: 0.3s; }
         .brand { font-family: 'Big Shoulders Display', sans-serif; font-size: 2.5rem; text-transform: uppercase; line-height: 0.9; margin-bottom: 50px; }
         .brand span { color: var(--espn-red); }
-        .nav-link { padding: 18px; margin-bottom: 8px; border-radius: 12px; cursor: pointer; font-weight: 900; text-transform: uppercase; transition: 0.3s; color: #555; display: flex; align-items: center; gap: 12px; }
+        .nav-link { padding: 18px; margin-bottom: 8px; border-radius: 12px; cursor: pointer; font-weight: 900; text-transform: uppercase; transition: 0.3s; color: #555; display: flex; align-items: center; gap: 12px; font-size: 0.9rem; }
         .nav-link:hover, .nav-link.active { background: #1a1a1a; color: white; }
         .nav-link.active { border-left: 5px solid var(--espn-red); }
 
         /* --- ÁREA PRINCIPAL --- */
-        main { flex-grow: 1; padding: 40px; overflow-y: auto; scroll-behavior: smooth; padding-bottom: 120px; }
+        main { flex-grow: 1; padding: 40px; overflow-y: auto; scroll-behavior: smooth; padding-bottom: 150px; }
         .section { display: none; animation: fadeIn 0.4s ease; }
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* --- CARDS Y FORMULARIOS --- */
-        .espn-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 15px; padding: 25px; margin-bottom: 25px; }
-        h1 { font-family: 'Big Shoulders Display', sans-serif; font-size: 4rem; margin: 0 0 30px 0; text-transform: uppercase; }
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 15px; }
-        input, select, textarea { background: #1a1a1a; border: 1px solid #333; padding: 15px; color: white; border-radius: 8px; width: 100%; box-sizing: border-box; font-weight: 700; }
+        .espn-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 15px; padding: 20px; margin-bottom: 25px; }
+        h1 { font-family: 'Big Shoulders Display', sans-serif; font-size: 4rem; margin: 0 0 20px 0; text-transform: uppercase; line-height: 1; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 15px; }
+        input, select, textarea { background: #1a1a1a; border: 1px solid #333; padding: 12px; color: white; border-radius: 8px; width: 100%; box-sizing: border-box; font-weight: 700; font-size: 16px; } /* font 16px evita zoom en iOS */
         
-        .btn-espn { background: var(--espn-red); color: white; border: none; padding: 18px 30px; border-radius: 8px; font-weight: 900; text-transform: uppercase; cursor: pointer; transition: 0.3s; width: 100%; }
-        .btn-espn:hover { transform: scale(1.02); box-shadow: 0 0 20px rgba(230,0,0,0.4); }
-        .btn-danger { background: transparent; border: 1px solid #ff4444; color: #ff4444; margin-top: 10px; padding: 10px; font-size: 0.7rem; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; }
+        .btn-espn { background: var(--espn-red); color: white; border: none; padding: 16px; border-radius: 8px; font-weight: 900; text-transform: uppercase; cursor: pointer; transition: 0.3s; width: 100%; }
+        .btn-danger { background: transparent; border: 1px solid #ff4444; color: #ff4444; margin-top: 10px; padding: 10px; font-size: 0.7rem; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; text-transform: uppercase; }
 
-        /* --- DISEÑO DE PARTIDOS (2 COLUMNAS) --- */
-        .jornada-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px; padding-bottom: 80px; }
+        /* --- DISEÑO DE PARTIDOS (RESPONSIVO) --- */
+        .jornada-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px; }
         .label-dia { color: var(--espn-red); font-family: 'Big Shoulders Display', sans-serif; font-size: 2.5rem; display: block; border-bottom: 2px solid var(--espn-red); margin-bottom: 20px; }
 
         .match-card {
             background: #161616;
             border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 15px;
+            padding: 15px;
+            margin-bottom: 12px;
             border-left: 5px solid var(--espn-red);
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
             animation: cardAppear 0.5s ease-out forwards;
             opacity: 0;
         }
 
-        @keyframes cardAppear { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes cardAppear { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
 
-        .teams { font-weight: 900; font-size: 1.2rem; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
-        .vs { color: var(--espn-red); font-size: 0.8rem; margin: 0 10px; }
-        .details { font-size: 0.85rem; color: #888; font-weight: 700; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-        .cancha-badge { background: #333; color: white; padding: 3px 10px; border-radius: 4px; font-size: 0.75rem; text-transform: uppercase; }
+        .teams { font-weight: 900; font-size: 1.1rem; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
+        .vs { color: var(--espn-red); font-size: 0.7rem; margin: 0 5px; }
+        .details { font-size: 0.8rem; color: #888; font-weight: 700; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+        .cancha-badge { background: #333; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; text-transform: uppercase; }
 
-        .btn-delete { background: none; border: 1px solid #444; color: #666; cursor: pointer; padding: 5px 10px; border-radius: 5px; transition: 0.3s; }
-        .btn-delete:hover { background: #ff4444; color: white; }
+        .btn-delete { background: #222; border: 1px solid #444; color: #888; cursor: pointer; padding: 4px 10px; border-radius: 5px; font-weight: bold; }
+
+        /* --- MÓVIL AJUSTES --- */
+        @media (max-width: 850px) {
+            body { flex-direction: column; }
+            nav { width: 100%; height: auto; padding: 15px; border-right: none; border-bottom: 2px solid var(--espn-red); }
+            .brand { margin-bottom: 15px; font-size: 1.8rem; text-align: center; }
+            .nav-link { padding: 10px; margin-bottom: 5px; font-size: 0.75rem; justify-content: center; }
+            main { padding: 20px; padding-bottom: 100px; }
+            h1 { font-size: 2.5rem; }
+            .jornada-grid { grid-template-columns: 1fr; gap: 15px; }
+            .label-dia { font-size: 1.8rem; }
+        }
 
         /* --- MODAL --- */
-        #modal-urgente { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
-        .modal-content { background: #111; border: 3px solid var(--urgent); padding: 40px; border-radius: 20px; max-width: 500px; text-align: center; position: relative; }
-
-        @media (max-width: 900px) { .jornada-grid { grid-template-columns: 1fr; } }
+        #modal-urgente { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .modal-content { background: #111; border: 3px solid var(--urgent); padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; text-align: center; position: relative; }
     </style>
 </head>
 <body>
 
     <div id="modal-urgente">
         <div class="modal-content">
-            <span style="position:absolute; top:15px; right:20px; font-size:2rem; cursor:pointer" onclick="cerrarModal()">&times;</span>
-            <div style="font-size: 3rem; margin-bottom: 10px;">⚠️</div>
-            <h2 id="modal-titulo" style="font-family:'Big Shoulders Display'; color:var(--urgent); font-size:3rem; margin:0"></h2>
-            <p id="modal-texto" style="font-size: 1.2rem; margin: 25px 0; color: #ccc;"></p>
+            <span style="position:absolute; top:10px; right:15px; font-size:2rem; cursor:pointer" onclick="cerrarModal()">&times;</span>
+            <div style="font-size: 2.5rem; margin-bottom: 10px;">⚠️</div>
+            <h2 id="modal-titulo" style="font-family:'Big Shoulders Display'; color:var(--urgent); font-size:2.2rem; margin:0; text-transform:uppercase"></h2>
+            <p id="modal-texto" style="font-size: 1rem; margin: 20px 0; color: #ccc; line-height: 1.4;"></p>
             <button class="btn-espn" onclick="cerrarModal()" style="background:var(--urgent); color:black">ENTENDIDO</button>
         </div>
     </div>
 
     <nav>
         <div class="brand">SIERRA<br><span>JUÁREZ</span> 🏀</div>
-        <div class="nav-link active" onclick="showSection('anuncios')">Comunicados</div>
-        <div class="nav-link" onclick="showSection('partidos')">Programación</div>
-        <div class="nav-link" onclick="showSection('sanciones')">Disciplina</div>
-        <div class="nav-link" onclick="cerrarSesion()" style="margin-top:auto; font-size:0.7rem; opacity:0.4;">LOGOUT</div>
+        <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 5px;">
+            <div class="nav-link active" onclick="showSection('anuncios')">Avisos</div>
+            <div class="nav-link" onclick="showSection('partidos')">Roles</div>
+            <div class="nav-link" onclick="showSection('sanciones')">Sanciones</div>
+            <div class="nav-link" onclick="cerrarSesion()" style="color:var(--espn-red); opacity:0.8">Salir</div>
+        </div>
     </nav>
 
     <main>
         <div id="anuncios" class="section active">
             <h1>News Center</h1>
             <div class="espn-card">
-                <input type="text" id="titulo-aviso" placeholder="TITULO DEL AVISO" style="margin-bottom:12px">
-                <textarea id="contenido-aviso" placeholder="DETALLES..." style="height: 80px; resize: none;"></textarea>
-                <div style="margin-top:15px; display: flex; gap: 15px;">
+                <input type="text" id="titulo-aviso" placeholder="TÍTULO">
+                <textarea id="contenido-aviso" placeholder="MENSAJE..." style="height: 80px; margin-top:10px"></textarea>
+                <div style="margin-top:12px; display: flex; gap: 10px;">
                     <select id="tipo-aviso"><option value="normal">Noticia</option><option value="urgente">⚠️ Urgente</option></select>
-                    <button class="btn-espn" onclick="guardarAviso()">Publicar Noticia</button>
+                    <button class="btn-espn" onclick="guardarAviso()">Publicar</button>
                 </div>
             </div>
             <div id="lista-anuncios"></div>
         </div>
 
         <div id="partidos" class="section">
-            <h1>Agenda Semanal</h1>
+            <h1>Agenda</h1>
             <div class="espn-card">
                 <div class="form-grid">
                     <input type="text" id="local" placeholder="Local">
                     <input type="text" id="visita" placeholder="Visita">
-                    <select id="cancha"><option value="Central">Central</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select>
+                    <select id="cancha">
+                        <option value="Central">Central</option>
+                        <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                        <option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>
+                    </select>
                     <input type="time" id="hora">
                     <select id="dia"><option value="Sábado">Sábado</option><option value="Domingo">Domingo</option></select>
                 </div>
-                <button class="btn-espn" id="btn-guardar-partido">Publicar Partido</button>
-                <button class="btn-danger" onclick="limpiarJornadaCompleta()">⚠️ BORRAR TODA LA JORNADA</button>
+                <button class="btn-espn" id="btn-guardar-partido">Subir Juego</button>
+                <button class="btn-danger" onclick="limpiarJornadaCompleta()">Borrar Todo el Rol</button>
             </div>
 
             <div class="jornada-grid">
@@ -132,7 +146,7 @@
             <h1>Disciplina</h1>
             <div class="espn-card">
                 <div class="form-grid">
-                    <input type="text" id="jugador-san" placeholder="Jugador">
+                    <input type="text" id="jugador-san" placeholder="Nombre Jugador">
                     <input type="text" id="equipo-san" placeholder="Equipo">
                     <input type="text" id="rep-san" placeholder="Representante">
                     <select id="cat-san">
@@ -141,9 +155,9 @@
                         <option value="Juvenil">Juvenil</option>
                     </select>
                     <select id="estado-san"><option value="activa">Activa</option><option value="pendiente">Pendiente</option></select>
-                    <input type="text" id="motivo-san" placeholder="Sanción (ej: 2 Jornadas)">
+                    <input type="text" id="motivo-san" placeholder="Ej: 2 Jornadas">
                 </div>
-                <button class="btn-espn" onclick="guardarSancion()">Registrar Castigo</button>
+                <button class="btn-espn" onclick="guardarSancion()">Guardar Sanción</button>
             </div>
             <div id="lista-sanciones"></div>
         </div>
