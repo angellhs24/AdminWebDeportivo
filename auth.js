@@ -12,7 +12,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
 
     // Consultamos la tabla Usuarios
     const { data, error } = await _supabase
-        .from('Usuarios')
+        .from('usuarios')
         .select('*')
         .eq('usuario', user)
         .eq('contrasena', pass)
