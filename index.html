@@ -16,36 +16,63 @@
 
         body { font-family: 'Inter', sans-serif; background: var(--bg-body); color: white; margin: 0; display: flex; height: 100vh; overflow: hidden; }
 
-        /* --- SIDEBAR --- */
-        nav { width: 280px; background: #000; border-right: 2px solid var(--espn-red); display: flex; flex-direction: column; padding: 30px; }
-        .brand { font-family: 'Big Shoulders Display', sans-serif; font-size: 2.5rem; text-transform: uppercase; line-height: 0.9; margin-bottom: 50px; }
+        /* --- NAVEGACIÓN --- */
+        nav { width: 280px; background: #000; border-right: 2px solid var(--espn-red); display: flex; flex-direction: column; padding: 30px; box-sizing: border-box; }
+        .brand { font-family: 'Big Shoulders Display', sans-serif; font-size: 2.5rem; text-transform: uppercase; line-height: 0.9; margin-bottom: 50px; cursor: default; }
         .brand span { color: var(--espn-red); }
         .nav-link { padding: 18px; margin-bottom: 8px; border-radius: 12px; cursor: pointer; font-weight: 900; text-transform: uppercase; transition: 0.3s; color: #555; display: flex; align-items: center; gap: 12px; }
         .nav-link:hover, .nav-link.active { background: #1a1a1a; color: white; }
         .nav-link.active { border-left: 5px solid var(--espn-red); }
 
-        /* --- MAIN --- */
-        main { flex-grow: 1; padding: 40px; overflow-y: auto; }
+        /* --- ÁREA PRINCIPAL --- */
+        main { flex-grow: 1; padding: 40px; overflow-y: auto; scroll-behavior: smooth; }
         .section { display: none; animation: fadeIn 0.4s ease; }
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- CARDS --- */
-        .espn-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 15px; padding: 25px; margin-bottom: 25px; }
-        h1 { font-family: 'Big Shoulders Display', sans-serif; font-size: 4rem; margin: 0 0 30px 0; text-transform: uppercase; }
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px; }
-        input, select, textarea { background: #1a1a1a; border: 1px solid #333; padding: 15px; color: white; border-radius: 8px; width: 100%; box-sizing: border-box; font-weight: 700; }
-        input:focus { border-color: var(--espn-red); outline: none; }
+        /* --- CARDS Y FORMULARIOS --- */
+        .espn-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 15px; padding: 25px; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h1 { font-family: 'Big Shoulders Display', sans-serif; font-size: 4rem; margin: 0 0 30px 0; text-transform: uppercase; letter-spacing: 2px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 15px; }
+        input, select, textarea { background: #1a1a1a; border: 1px solid #333; padding: 15px; color: white; border-radius: 8px; width: 100%; box-sizing: border-box; font-weight: 700; transition: 0.3s; }
+        input:focus { border-color: var(--espn-red); outline: none; background: #222; }
         
-        .btn-espn { background: var(--espn-red); color: white; border: none; padding: 18px 30px; border-radius: 8px; font-weight: 900; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
+        .btn-espn { background: var(--espn-red); color: white; border: none; padding: 18px 30px; border-radius: 8px; font-weight: 900; text-transform: uppercase; cursor: pointer; transition: 0.3s; width: 100%; }
         .btn-espn:hover { transform: scale(1.02); box-shadow: 0 0 20px rgba(230,0,0,0.4); }
 
-        /* --- LISTS --- */
-        .item { background: #161616; border: 1px solid var(--border); padding: 20px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #333; }
-        .item.urgent-style { border-left-color: var(--urgent); }
-        .badge { padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: 900; text-transform: uppercase; margin-right: 10px; }
-        .bg-urgente { background: var(--urgent); color: black; }
-        .bg-normal { background: #444; color: white; }
+        /* --- DISEÑO DE PARTIDOS (2 COLUMNAS) --- */
+        .jornada-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px; }
+        .label-dia { color: var(--espn-red); font-family: 'Big Shoulders Display', sans-serif; font-size: 2.5rem; display: block; border-bottom: 2px solid var(--espn-red); margin-bottom: 20px; padding-bottom: 5px; }
+
+        .match-card {
+            background: #161616;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 15px;
+            border-left: 5px solid var(--espn-red);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            animation: cardAppear 0.5s ease-out forwards;
+            opacity: 0;
+            position: relative;
+            transition: 0.3s;
+        }
+        .match-card:hover { background: #1a1a1a; transform: translateX(5px); }
+
+        @keyframes cardAppear {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .teams { font-weight: 900; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; justify-content: space-between; }
+        .vs { color: var(--espn-red); font-size: 0.8rem; margin: 0 10px; opacity: 0.7; }
+        .details { font-size: 0.85rem; color: #888; font-weight: 700; display: flex; gap: 10px; align-items: center; }
+        .cancha-badge { background: #333; color: white; padding: 3px 10px; border-radius: 4px; font-size: 0.75rem; text-transform: uppercase; }
+
+        /* --- BOTONES DE ACCIÓN --- */
+        .btn-delete { background: none; border: 1px solid #444; color: #666; cursor: pointer; padding: 5px 10px; border-radius: 5px; transition: 0.3s; font-size: 0.8rem; }
+        .btn-delete:hover { background: #ff4444; color: white; border-color: #ff4444; }
 
         /* --- MODAL URGENTE --- */
         #modal-urgente { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
@@ -53,8 +80,10 @@
         .modal-content h2 { font-family: 'Big Shoulders Display', sans-serif; font-size: 3rem; color: var(--urgent); margin: 0; }
         .close-modal { position: absolute; top: 15px; right: 20px; font-size: 2rem; cursor: pointer; color: white; }
 
-        /* STYLING ROL */
-        .label-dia { color: var(--espn-red); font-weight: 900; margin-top: 30px; display: block; border-bottom: 2px solid var(--espn-red); padding-bottom: 5px; }
+        /* --- RESPONSIVO --- */
+        @media (max-width: 900px) {
+            .jornada-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -62,9 +91,9 @@
     <div id="modal-urgente">
         <div class="modal-content">
             <span class="close-modal" onclick="cerrarModal()">&times;</span>
-            <div style="font-size: 3rem;">⚠</div>
-            <h2 id="modal-titulo">AVISO URGENTE</h2>
-            <p id="modal-texto" style="font-size: 1.2rem; margin: 20px 0; line-height: 1.6;"></p>
+            <div style="font-size: 3rem; margin-bottom: 10px;">⚠️</div>
+            <h2 id="modal-titulo">ALERTA DE LIGA</h2>
+            <p id="modal-texto" style="font-size: 1.2rem; margin: 25px 0; line-height: 1.6; color: #ccc;"></p>
             <button class="btn-espn" onclick="cerrarModal()" style="background:var(--urgent); color:black">ENTENDIDO</button>
         </div>
     </div>
@@ -74,7 +103,7 @@
         <div class="nav-link active" onclick="showSection('anuncios')">Comunicados</div>
         <div class="nav-link" onclick="showSection('partidos')">Programación</div>
         <div class="nav-link" onclick="showSection('sanciones')">Disciplina</div>
-        <div class="nav-link" onclick="cerrarSesion()" style="margin-top:auto; font-size:0.7rem; opacity:0.5">SALIR DEL SISTEMA</div>
+        <div class="nav-link" onclick="cerrarSesion()" style="margin-top:auto; font-size:0.7rem; opacity:0.4; letter-spacing: 1px;">LOGOUT SYSTEM</div>
     </nav>
 
     <main>
@@ -82,22 +111,23 @@
             <h1>News Center</h1>
             <div class="espn-card">
                 <h3>Publicar Nuevo Mensaje</h3>
-                <input type="text" id="titulo-aviso" placeholder="TITULO DEL AVISO" style="margin-bottom:10px">
-                <textarea id="contenido-aviso" placeholder="CUERPO DEL MENSAJE..."></textarea>
-                <div style="margin-top:15px; display: flex; gap: 15px; align-items: center;">
-                    <select id="tipo-aviso" style="width: 200px;">
-                        <option value="normal">Noticia Normal</option>
-                        <option value="urgente">⚠️ AVISO URGENTE</option>
+                <input type="text" id="titulo-aviso" placeholder="TITULO DEL AVISO" style="margin-bottom:12px">
+                <textarea id="contenido-aviso" placeholder="ESCRIBE LOS DETALLES AQUÍ..." style="height: 100px; resize: none;"></textarea>
+                <div style="margin-top:15px; display: flex; gap: 15px;">
+                    <select id="tipo-aviso" style="flex: 1;">
+                        <option value="normal">Noticia Estándar</option>
+                        <option value="urgente">⚠️ AVISO URGENTE (POP-UP)</option>
                     </select>
-                    <button class="btn-espn" onclick="guardarAviso()">Lanzar Comunicado</button>
+                    <button class="btn-espn" onclick="guardarAviso()" style="flex: 1;">Lanzar Noticia</button>
                 </div>
             </div>
             <div id="lista-anuncios"></div>
         </div>
 
         <div id="partidos" class="section">
-            <h1>Rol de Juegos</h1>
+            <h1>Agenda Semanal</h1>
             <div class="espn-card">
+                <h3>Registrar Encuentro</h3>
                 <div class="form-grid">
                     <input type="text" id="local" placeholder="Equipo Local">
                     <input type="text" id="visita" placeholder="Equipo Visita">
@@ -114,13 +144,23 @@
                         <option value="Domingo">Domingo</option>
                     </select>
                 </div>
-                <button class="btn-espn" id="btn-guardar-partido">Publicar en el Rol</button>
+                <button class="btn-espn" id="btn-guardar-partido">Subir al Calendario Oficial</button>
             </div>
-            <div id="jornada-organizada"></div>
+
+            <div class="jornada-grid">
+                <div>
+                    <span class="label-dia">SÁBADO</span>
+                    <div id="lista-sabado"></div>
+                </div>
+                <div>
+                    <span class="label-dia">DOMINGO</span>
+                    <div id="lista-domingo"></div>
+                </div>
+            </div>
         </div>
 
         <div id="sanciones" class="section">
-            <h1>Panel Disciplinario</h1>
+            <h1>Disciplina</h1>
             <div class="espn-card">
                 <div class="form-grid">
                     <input type="text" id="jugador-san" placeholder="Jugador">
@@ -138,7 +178,7 @@
                     </select>
                     <input type="text" id="motivo-san" placeholder="Sanción / Jornadas">
                 </div>
-                <button class="btn-espn" onclick="guardarSancion()">Aplicar Castigo</button>
+                <button class="btn-espn" onclick="guardarSancion()">Registrar Castigo</button>
             </div>
             <div id="lista-sanciones"></div>
         </div>
