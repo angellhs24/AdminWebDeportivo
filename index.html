@@ -3,178 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Sierra Juárez | Basketball Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Roboto:wght@400;900&display=swap" rel="stylesheet">
+    <title>SIERRA JUÁREZ | HQ Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --espn-red: #ff0000;
-            --dark-blue: #040508;
-            --card-gray: #1a1b1f;
-            --text-white: #ffffff;
-            --accent-orange: #ff8800; /* Color balón */
+            --espn-red: #e60000;
+            --bg-body: #050505;
+            --card-bg: #121212;
+            --border-color: #222;
+            --status-urgent: #ff0055;
+            --status-active: #00ff88;
+            --status-pending: #ffcc00;
         }
 
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--dark-blue);
-            color: var(--text-white);
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-body);
+            color: white;
             margin: 0;
             display: flex;
             height: 100vh;
-            overflow: hidden;
         }
 
-        /* --- SIDEBAR DEPORTIVO --- */
+        /* --- NAVIGATION --- */
         nav {
             width: 280px;
             background: #000;
-            border-right: 3px solid var(--espn-red);
+            border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            padding: 20px;
+            padding: 25px;
         }
 
-        .logo-container {
-            text-align: center;
-            margin-bottom: 40px;
-            font-family: 'Oswald', sans-serif;
-            font-size: 1.5rem;
+        .brand {
+            font-family: 'Big Shoulders Display', sans-serif;
+            font-size: 2.2rem;
+            line-height: 1;
+            margin-bottom: 50px;
+            color: white;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        .ball-icon { color: var(--accent-orange); font-size: 2rem; margin-bottom: 10px; }
+        .brand span { color: var(--espn-red); }
 
         .nav-link {
-            padding: 15px 20px;
-            margin-bottom: 10px;
-            border-radius: 4px;
+            padding: 18px;
+            margin-bottom: 8px;
+            border-radius: 12px;
             cursor: pointer;
-            font-weight: 900;
+            font-weight: 700;
             text-transform: uppercase;
-            transition: all 0.3s;
-            border-left: 0px solid var(--espn-red);
+            letter-spacing: 1px;
+            transition: 0.3s;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
         .nav-link:hover, .nav-link.active {
-            background: linear-gradient(90deg, #222, #000);
-            border-left: 5px solid var(--espn-red);
-            color: var(--espn-red);
+            background: #1a1a1a;
+            color: white;
         }
 
-        /* --- ÁREA DE CONTENIDO --- */
-        main { flex-grow: 1; padding: 40px; overflow-y: auto; background: radial-gradient(circle at top right, #1a1a1a, #040508); }
+        .nav-link.active { border-left: 4px solid var(--espn-red); border-radius: 0 12px 12px 0; }
 
-        .section { display: none; animation: fadeIn 0.4s ease-in-out; }
+        /* --- MAIN AREA --- */
+        main { flex-grow: 1; padding: 40px; overflow-y: auto; scroll-behavior: smooth; }
+
+        .section { display: none; animation: slideIn 0.4s ease-out; }
         .section.active { display: block; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        h1 { font-family: 'Oswald', sans-serif; font-size: 3rem; text-transform: uppercase; border-bottom: 4px solid var(--espn-red); display: inline-block; margin-bottom: 30px; }
+        h1 { font-family: 'Big Shoulders Display', sans-serif; font-size: 3.5rem; margin-bottom: 30px; text-transform: uppercase; }
 
-        .espn-card {
-            background: var(--card-gray);
-            border-radius: 8px;
-            padding: 25px;
+        /* --- CARDS & FORMS --- */
+        .glass-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
             margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border: 1px solid #333;
         }
 
-        /* --- FORMULARIOS --- */
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 15px; }
 
         input, select, textarea {
-            background: #2a2b2f;
-            border: 2px solid #444;
-            padding: 12px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            padding: 14px;
             color: white;
-            border-radius: 4px;
-            font-weight: bold;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         input:focus { border-color: var(--espn-red); outline: none; }
 
-        /* --- BOTONES ANIMADOS --- */
-        .btn-espn {
+        .btn-action {
             background: var(--espn-red);
             color: white;
             border: none;
-            padding: 15px 30px;
-            font-weight: 900;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 800;
             text-transform: uppercase;
             cursor: pointer;
             transition: 0.3s;
-            position: relative;
-            overflow: hidden;
-            margin-top: 15px;
+            display: inline-block;
         }
 
-        .btn-espn:hover { background: #cc0000; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(255,0,0,0.4); }
+        .btn-action:hover { transform: scale(1.03); box-shadow: 0 0 20px rgba(230, 0, 0, 0.4); }
 
-        /* --- ORGANIZACIÓN DE PARTIDOS (DÍAS Y CANCHAS) --- */
-        .jornada-container { margin-top: 20px; }
-        .dia-header { background: #333; padding: 10px 20px; margin-top: 20px; font-family: 'Oswald', sans-serif; color: var(--accent-orange); }
-        .cancha-group { margin-left: 15px; border-left: 2px solid #444; padding-left: 15px; margin-bottom: 20px; }
-        .cancha-title { color: #aaa; text-transform: uppercase; font-size: 0.9rem; margin: 10px 0; }
-
-        .match-row {
+        /* --- DATA LISTS --- */
+        .data-item {
+            background: #161616;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #25262b;
-            padding: 15px;
-            margin-bottom: 8px;
-            border-radius: 4px;
-            border-right: 4px solid var(--espn-red);
         }
 
-        .btn-delete { background: none; border: 1px solid #555; color: #ff4444; padding: 5px 10px; cursor: pointer; transition: 0.3s; }
-        .btn-delete:hover { background: #ff4444; color: white; border-color: #ff4444; }
+        .badge {
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
 
+        .status-urgente { background: var(--status-urgent); color: white; }
+        .status-activa { background: var(--status-active); color: #000; }
+        .status-pendiente { background: var(--status-pendiente); color: #000; }
+
+        .btn-delete { color: #ff4444; background: none; border: 1px solid #333; cursor: pointer; padding: 8px; border-radius: 8px; }
+        .btn-delete:hover { background: #ff4444; color: white; }
+
+        /* ROL DE JUEGO STYLING */
+        .day-label { color: var(--espn-red); font-weight: 900; text-transform: uppercase; margin-top: 30px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        .cancha-label { color: #aaa; font-size: 0.8rem; margin: 15px 0 5px 0; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <nav>
-        <div class="logo-container">
-            <div class="ball-icon">🏀</div>
-            SIERRA JUÁREZ<br><span style="color:var(--espn-red); font-size:0.8rem">Basketball Admin</span>
-        </div>
-        
+        <div class="brand">SIERRA<br><span>JUÁREZ</span> 🏀</div>
         <div class="nav-link active" onclick="showSection('anuncios')">Noticias</div>
-        <div class="nav-link" onclick="showSection('partidos')">Programación</div>
-        <div class="nav-link" onclick="showSection('sanciones')">Disciplina</div>
-        
-        <div class="nav-link" onclick="cerrarSesion()" style="margin-top:auto; color:#666">Cerrar Sesión</div>
+        <div class="nav-link" onclick="showSection('partidos')">Rol de Juego</div>
+        <div class="nav-link" onclick="showSection('sanciones')">Sanciones</div>
+        <div class="nav-link" onclick="cerrarSesion()" style="margin-top:auto; font-size: 0.8rem;">Cerrar Sesión</div>
     </nav>
 
     <main>
         <div id="anuncios" class="section active">
-            <h1>Avisos de Oficina</h1>
-            <div class="espn-card">
-                <input type="text" id="titulo-aviso" placeholder="ENCABEZADO DE NOTICIA" style="width:96%">
-                <textarea id="contenido-aviso" placeholder="DETALLES DE LA NOTICIA..." style="width:96%; height:100px; margin-top:10px"></textarea>
-                <button class="btn-espn" onclick="guardarAviso()">Publicar Noticia</button>
+            <h1>Newsroom</h1>
+            <div class="glass-card">
+                <input type="text" id="titulo-aviso" placeholder="TÍTULO DEL ANUNCIO" style="margin-bottom: 10px;">
+                <textarea id="contenido-aviso" placeholder="Escribe el cuerpo del aviso aquí..."></textarea>
+                <button class="btn-action" onclick="guardarAviso()" style="margin-top:15px">Publicar Noticia</button>
             </div>
             <div id="lista-anuncios"></div>
         </div>
 
         <div id="partidos" class="section">
-            <h1>Roles de Juego</h1>
-            <div class="espn-card">
-                <h3>REGISTRAR ENCUENTRO</h3>
-                <div class="form-grid">
-                    <input type="text" id="local" placeholder="EQUIPO LOCAL">
-                    <input type="text" id="visita" placeholder="EQUIPO VISITA">
+            <h1>Programación</h1>
+            <div class="glass-card">
+                <h3>Nuevo Encuentro</h3>
+                <div class="form-row">
+                    <input type="text" id="local" placeholder="Local">
+                    <input type="text" id="visita" placeholder="Visita">
                     <select id="cancha">
                         <option value="Central">Cancha Central</option>
-                        <option value="1">Cancha 1</option>
-                        <option value="2">Cancha 2</option>
-                        <option value="3">Cancha 3</option>
-                        <option value="4">Cancha 4</option>
-                        <option value="5">Cancha 5</option>
-                        <option value="6">Cancha 6</option>
+                        <option value="1">Cancha 1</option><option value="2">Cancha 2</option>
+                        <option value="3">Cancha 3</option><option value="4">Cancha 4</option>
+                        <option value="5">Cancha 5</option><option value="6">Cancha 6</option>
                         <option value="7">Cancha 7</option>
                     </select>
                     <input type="time" id="hora">
@@ -183,28 +190,34 @@
                         <option value="Domingo">Domingo</option>
                     </select>
                 </div>
-                <button class="btn-espn" id="btn-guardar-partido">Guardar en Calendario</button>
+                <button class="btn-action" id="btn-guardar-partido">Subir Rol</button>
             </div>
-
-            <div class="espn-card">
-                <div style="display:flex; justify-content:space-between">
-                    <h3>PARTIDOS PROGRAMADOS</h3>
-                    <button class="btn-delete" onclick="limpiarJornada()">Limpiar Toda la Semana</button>
-                </div>
-                <div id="jornada-organizada">
-                    </div>
-            </div>
+            <div id="jornada-organizada"></div>
+            <button class="btn-delete" onclick="limpiarJornada()" style="margin-top:20px; width:100%">Limpiar Toda la Base de Datos de Partidos</button>
         </div>
 
         <div id="sanciones" class="section">
-            <h1>Reporte Disciplinario</h1>
-            <div class="espn-card">
-                <div class="form-grid">
-                    <input type="text" id="jugador-san" placeholder="NOMBRE DEL JUGADOR">
-                    <input type="text" id="equipo-san" placeholder="CLUB">
-                    <input type="text" id="motivo-san" placeholder="SANCIÓN (Ej: Suspensión 2 juegos)">
+            <h1>Disciplina</h1>
+            <div class="glass-card">
+                <div class="form-row">
+                    <input type="text" id="jugador-san" placeholder="Nombre Jugador">
+                    <input type="text" id="equipo-san" placeholder="Equipo">
+                    <input type="text" id="rep-san" placeholder="Representante">
                 </div>
-                <button class="btn-espn" onclick="guardarSancion()">Aplicar Castigo</button>
+                <div class="form-row">
+                    <select id="estado-san">
+                        <option value="activa">Activa</option>
+                        <option value="pendiente">Pendiente</option>
+                        <option value="urgente">Urgente</option>
+                    </select>
+                    <select id="cat-san">
+                        <option value="Varonil">Varonil</option>
+                        <option value="Femenil">Femenil</option>
+                        <option value="Juvenil">Juvenil</option>
+                    </select>
+                    <input type="text" id="motivo-san" placeholder="Sanción (Ej: 2 Partidos)">
+                </div>
+                <button class="btn-action" onclick="guardarSancion()">Registrar Sanción</button>
             </div>
             <div id="lista-sanciones"></div>
         </div>
