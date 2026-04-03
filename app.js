@@ -1,32 +1,32 @@
-// Tus llaves de Supabase
+// Configuración de conexión (Tus llaves reales)
 const URL_PROYECTO = 'https://rvbjdtqjlznshijyfacv.supabase.co';
-const LLAVE_ANON = 'Sb_publishable_tOUsH1k4tx_1vCxSt_2Fzw_krnbCJTR';
+const LLAVE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ2YmpkdHFqbHpuc2hpanlmYWN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNzA3NzAsImV4cCI6MjA5MDc0Njc3MH0.-wa0UpyQZBJ2uZVp0qhwcGD30OVhZxRLRO5JpLJuAWQ';
 
-// Inicializar la conexión
+// Inicializar Supabase
 const _supabase = supabase.createClient(URL_PROYECTO, LLAVE_ANON);
 
-// Escuchar cuando se le dé clic al botón "Guardar"
+// Función para guardar
 document.getElementById('form-partido').addEventListener('submit', async (e) => {
-    e.preventDefault(); // Evita que la página se refresque
+    e.preventDefault();
 
-    // Capturar los datos del formulario
     const datos = {
         local: document.getElementById('local').value,
         visita: document.getElementById('visita').value,
         cancha: document.getElementById('cancha').value,
         hora: document.getElementById('hora').value,
         dia: document.getElementById('dia').value,
-        tipo: 'CAMP', // Valores por defecto
+        tipo: 'CAMP', 
         cat: 'Varonil'
     };
 
-    // MANDAR A LA NUBE
+    console.log("Intentando guardar:", datos);
+
     const { error } = await _supabase.from('partidos').insert([datos]);
 
     if (error) {
-        alert("Hubo un error: " + error.message);
+        alert("Error de Supabase: " + error.message);
     } else {
-        alert("¡ÉXITO! Partido guardado en la nube.");
+        alert("¡ÉXITO! El partido se guardó en la nube de Ohio.");
         document.getElementById('form-partido').reset();
     }
 });
