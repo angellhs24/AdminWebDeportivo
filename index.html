@@ -2,31 +2,176 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Admin - Liga Sierra Juárez</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control | Liga Sierra Juárez</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #1a1a1a; color: white; display: flex; justify-content: center; padding: 50px; }
-        .card { background: #2a2a2a; padding: 30px; border-radius: 15px; border-top: 5px solid #ff4500; width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h2 { text-align: center; color: #ff4500; margin-bottom: 20px; }
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; background: #333; color: white; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; background: #ff4500; border: none; color: white; font-weight: bold; border-radius: 8px; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-        button:hover { background: #e63e00; transform: scale(1.02); }
+        :root {
+            --primary: #ff4500;
+            --secondary: #2d2d2d;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0f0f0f;
+            color: white;
+            margin: 0;
+            display: flex;
+        }
+
+        /* Barra Lateral */
+        nav {
+            width: 250px;
+            height: 100vh;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            position: fixed;
+        }
+
+        nav h2 { font-size: 1.2rem; color: var(--primary); margin-bottom: 30px; }
+
+        .nav-link {
+            padding: 15px;
+            margin: 5px 0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            color: #ccc;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--primary);
+            color: white;
+            transform: translateX(10px);
+        }
+
+        /* Contenedor Principal */
+        main {
+            margin-left: 280px;
+            padding: 40px;
+            width: 100%;
+        }
+
+        .section {
+            display: none; /* Se ocultan por defecto */
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Tarjetas y Contenedores */
+        .card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: white;
+        }
+
+        button {
+            padding: 12px 25px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn-add { background: var(--primary); color: white; }
+        .btn-danger { background: #ff4d4d; color: white; margin-top: 10px; }
+        
+        button:hover { filter: brightness(1.2); transform: scale(1.05); }
+
+        /* Estilo de la lista de elementos (Partidos/Sanciones) */
+        .item-lista {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.03);
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+        }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h2>NUEVO PARTIDO</h2>
-        <form id="form-partido">
-            <input type="text" id="local" placeholder="Equipo Local" required>
-            <input type="text" id="visita" placeholder="Equipo Visitante" required>
-            <input type="text" id="cancha" placeholder="Nombre de la Cancha" required>
-            <input type="time" id="hora" required>
-            <select id="dia">
-                <option value="Sábado">Sábado</option>
-                <option value="Domingo">Domingo</option>
-            </select>
-            <button type="submit">GUARDAR EN LA NUBE</button>
-        </form>
-    </div>
+
+    <nav>
+        <h2>LIGA SIERRA JUÁREZ</h2>
+        <div class="nav-link active" onclick="showSection('anuncios')">📢 Anuncios</div>
+        <div class="nav-link" onclick="showSection('partidos')">⚽ Partidos</div>
+        <div class="nav-link" onclick="showSection('sanciones')">🚫 Sanciones</div>
+        <div class="nav-link" onclick="cerrarSesion()" style="margin-top: auto; color: #ff4d4d;">🚪 Salir</div>
+    </nav>
+
+    <main>
+        <div id="anuncios" class="section active">
+            <h1>Anuncios de Oficina</h1>
+            <div class="card">
+                <input type="text" id="titulo-aviso" placeholder="Título del aviso...">
+                <textarea id="contenido-aviso" placeholder="Contenido del mensaje..." style="width:100%; height:100px; background:rgba(255,255,255,0.1); border-radius:10px; color:white; padding:10px; border:1px solid var(--border);"></textarea>
+                <button class="btn-add" onclick="guardarAviso()">Publicar Anuncio</button>
+            </div>
+            <div id="lista-anuncios"></div>
+        </div>
+
+        <div id="partidos" class="section">
+            <h1>Gestión de Jornada</h1>
+            <div class="card">
+                <h3>Agregar Nuevo Partido</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <input type="text" id="local" placeholder="Equipo Local">
+                    <input type="text" id="visita" placeholder="Equipo Visita">
+                    <input type="text" id="cancha" placeholder="Cancha">
+                    <input type="time" id="hora">
+                    <select id="dia">
+                        <option value="Sábado">Sábado</option>
+                        <option value="Domingo">Domingo</option>
+                    </select>
+                </div>
+                <button class="btn-add" id="btn-guardar-partido">Guardar en la Nube</button>
+            </div>
+
+            <div class="card">
+                <h3>Partidos Actuales</h3>
+                <button class="btn-danger" onclick="limpiarJornada()">🗑️ Borrar TODA la Jornada</button>
+                <div id="lista-partidos"></div>
+            </div>
+        </div>
+
+        <div id="sanciones" class="section">
+            <h1>Sanciones y Castigos</h1>
+            <div class="card">
+                <input type="text" id="jugador-san" placeholder="Nombre del Jugador">
+                <input type="text" id="equipo-san" placeholder="Equipo">
+                <input type="text" id="motivo-san" placeholder="Motivo (ej: Roja directa)">
+                <button class="btn-add" onclick="guardarSancion()">Registrar Sanción</button>
+            </div>
+            <div id="lista-sanciones"></div>
+        </div>
+    </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="app.js"></script>
