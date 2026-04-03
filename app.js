@@ -36,3 +36,32 @@ document.getElementById('form-partido').addEventListener('submit', async (e) => 
         document.getElementById('form-partido').reset(); // Limpia el formulario
     }
 });
+
+// BORRAR UN PARTIDO POR ID
+async function eliminarPartido(id) {
+    const { error } = await _supabase
+        .from('Partidos')
+        .delete()
+        .eq('id', id); // 'eq' significa "igual a"
+
+    if (error) {
+        alert("No se pudo borrar: " + error.message);
+    } else {
+        alert("Partido eliminado correctamente");
+        location.reload(); // Recarga para que ya no se vea en la lista
+    }
+}
+
+// BORRAR TODO (CUIDADO: Esto limpia la tabla completa)
+async function limpiarTodaLaTabla() {
+    const confirmar = confirm("¿Estás seguro de borrar TODA la jornada?");
+    if (confirmar) {
+        const { error } = await _supabase
+            .from('Partidos')
+            .delete()
+            .neq('id', 0); // Borra todo lo que NO tenga ID 0 (o sea, todo)
+
+        alert("Jornada limpiada");
+    }
+}
+
