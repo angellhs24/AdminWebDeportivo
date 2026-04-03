@@ -28,7 +28,7 @@ function showSection(sectionId) {
 // --- GESTIÓN DE PARTIDOS ---
 document.getElementById('btn-guardar-partido').addEventListener('click', async () => {
     const btn = document.getElementById('btn-guardar-partido');
-    btn.innerText = "PROCESANDO...";
+    btn.innerText = "ENVIANDO...";
 
     const datos = {
         Local: document.getElementById('local').value,
@@ -42,40 +42,62 @@ document.getElementById('btn-guardar-partido').addEventListener('click', async (
     const { error } = await _supabase.from('Partidos').insert([datos]);
     
     if (error) {
-        alert("Error: " + error.message);
+        alert("Error al guardar: " + error.message);
+        btn.innerText = "REINTENTAR";
     } else {
-        btn.innerText = "¡GUARDADO!";
+        btn.innerText = "¡ÉXITO!";
         setTimeout(() => btn.innerText = "GUARDAR EN CALENDARIO", 2000);
         cargarPartidosOrganizados();
+        // Limpiar campos de equipos
+        document.getElementById('local').value = "";
+        document.getElementById('visita').value = "";
     }
 });
 
 async function cargarPartidosOrganizados() {
     const contenedor = document.getElementById('jornada-organizada');
-    contenedor.innerHTML = "Consultando base de datos...";
+    contenedor.innerHTML = "<p style='color:orange'>Buscando partidos en la nube...</p>";
 
-    const { data, error } = await _supabase.from('Partidos').select('*').order('Hora', { ascending: true });
+    const { data, error } = await _supabase
+        .from('Partidos')
+        .select('*')
+        .order('Hora', { ascending: true });
 
-    if (error) return;
+    if (error) {
+        contenedor.innerHTML = "<p style='color:red'>Error: " + error.message + "</p>";
+        return;
+    }
+
+    if (!data || data.length === 0) {
+        contenedor.innerHTML = "<p>No hay partidos programados para esta semana.</p>";
+        return;
+    }
 
     contenedor.innerHTML = "";
-    const dias = ["Sábado", "Domingo"];
-    const canchas = ["Central", "1", "2", "3", "4", "5", "6", "7"];
+    const diasValidos = ["Sábado", "Domingo"];
+    const canchasValidas = ["Central", "1", "2", "3", "4", "5", "6", "7"];
 
-    dias.forEach(dia => {
+    diasValidos.forEach(dia => {
+        // Filtramos asegurando que coincida el texto exacto
         const partidosDelDia = data.filter(p => p.Dia === dia);
+        
         if (partidosDelDia.length > 0) {
             contenedor.innerHTML += `<div class="dia-header">${dia.toUpperCase()}</div>`;
             
-            canchas.forEach(cancha => {
+            canchasValidas.forEach(cancha => {
                 const partidosCancha = partidosDelDia.filter(p => p.Cancha === cancha);
+                
                 if (partidosCancha.length > 0) {
-                    contenedor.innerHTML += `<div class="cancha-group"><div class="cancha-title">Cancha ${cancha}</div>`;
+                    contenedor.innerHTML += `
+                        <div class="cancha-group">
+                            <div class="cancha-title">CANCHA ${cancha.toUpperCase()}</div>
+                    `;
+                    
                     partidosCancha.forEach(p => {
                         contenedor.innerHTML += `
                             <div class="match-row">
-                                <span><b>${p.Hora}</b> | ${p.Local} vs ${p.Visita}</span>
-                                <button class="btn-delete" onclick="borrarPartido(${p.id})">X</button>
+                                <span><b style="color:var(--espn-red)">${p.Hora}</b> | ${p.Local} vs ${p.Visita}</span>
+                                <button class="btn-delete" onclick="borrarPartido(${p.id})">ELIMINAR</button>
                             </div>
                         `;
                     });
@@ -87,26 +109,27 @@ async function cargarPartidosOrganizados() {
 }
 
 async function borrarPartido(id) {
-    if(confirm("¿Eliminar este partido del rol?")) {
-        await _supabase.from('Partidos').delete().eq('id', id);
+    if(confirm("¿Seguro que quieres eliminar este partido del rol?")) {
+        const { error } = await _supabase.from('Partidos').delete().eq('id', id);
+        if (error) alert("Error al borrar");
         cargarPartidosOrganizados();
     }
 }
 
 async function limpiarJornada() {
-    if(confirm("⚠ ESTO BORRARÁ TODOS LOS PARTIDOS DE LA SEMANA. ¿Continuar?")) {
+    if(confirm("⚠ ¡PELIGRO! Vas a borrar TODOS los partidos. ¿Confirmar?")) {
         await _supabase.from('Partidos').delete().neq('id', 0);
         cargarPartidosOrganizados();
     }
 }
 
-// --- ANUNCIOS Y SANCIONES (Lógica similar) ---
+// --- ANUNCIOS Y SANCIONES ---
 async function guardarAviso() {
     const { error } = await _supabase.from('anuncios').insert([{ 
         Titulo: document.getElementById('titulo-aviso').value, 
         Contenido: document.getElementById('contenido-aviso').value 
     }]);
-    if(!error) cargarAnuncios();
+    if(!error) { alert("Anuncio publicado"); cargarAnuncios(); }
 }
 
 async function cargarAnuncios() {
@@ -114,7 +137,7 @@ async function cargarAnuncios() {
     const div = document.getElementById('lista-anuncios');
     div.innerHTML = "";
     data?.forEach(a => {
-        div.innerHTML += `<div class="match-row"><span>${a.Titulo}</span><button class="btn-delete" onclick="borrarAnuncio(${a.id})">Eliminar</button></div>`;
+        div.innerHTML += `<div class="match-row"><span>${a.Titulo}</span><button class="btn-delete" onclick="borrarAnuncio(${a.id})">X</button></div>`;
     });
 }
 
@@ -123,14 +146,13 @@ async function borrarAnuncio(id) {
     cargarAnuncios();
 }
 
-// Lógica de Sanciones
 async function guardarSancion() {
     const { error } = await _supabase.from('sanciones').insert([{ 
         Jugador: document.getElementById('jugador-san').value, 
         Equipo: document.getElementById('equipo-san').value,
         Motivo: document.getElementById('motivo-san').value
     }]);
-    if(!error) cargarSanciones();
+    if(!error) { alert("Sanción registrada"); cargarSanciones(); }
 }
 
 async function cargarSanciones() {
@@ -138,7 +160,7 @@ async function cargarSanciones() {
     const div = document.getElementById('lista-sanciones');
     div.innerHTML = "";
     data?.forEach(s => {
-        div.innerHTML += `<div class="match-row"><span><b>${s.Jugador}</b> (${s.Equipo}) - ${s.Motivo}</span><button class="btn-delete" onclick="borrarSancion(${s.id})">X</button></div>`;
+        div.innerHTML += `<div class="match-row"><span><b>${s.Jugador}</b> - ${s.Motivo}</span><button class="btn-delete" onclick="borrarSancion(${s.id})">X</button></div>`;
     });
 }
 
