@@ -18,30 +18,31 @@
 
         /* --- NAVEGACIÓN --- */
         nav { width: 280px; background: #000; border-right: 2px solid var(--espn-red); display: flex; flex-direction: column; padding: 30px; box-sizing: border-box; }
-        .brand { font-family: 'Big Shoulders Display', sans-serif; font-size: 2.5rem; text-transform: uppercase; line-height: 0.9; margin-bottom: 50px; cursor: default; }
+        .brand { font-family: 'Big Shoulders Display', sans-serif; font-size: 2.5rem; text-transform: uppercase; line-height: 0.9; margin-bottom: 50px; }
         .brand span { color: var(--espn-red); }
         .nav-link { padding: 18px; margin-bottom: 8px; border-radius: 12px; cursor: pointer; font-weight: 900; text-transform: uppercase; transition: 0.3s; color: #555; display: flex; align-items: center; gap: 12px; }
         .nav-link:hover, .nav-link.active { background: #1a1a1a; color: white; }
         .nav-link.active { border-left: 5px solid var(--espn-red); }
 
-        /* --- ÁREA PRINCIPAL --- */
-        main { flex-grow: 1; padding: 40px; overflow-y: auto; scroll-behavior: smooth; }
+        /* --- ÁREA PRINCIPAL (CORREGIDO EL SCROLL) --- */
+        main { flex-grow: 1; padding: 40px; overflow-y: auto; scroll-behavior: smooth; padding-bottom: 100px; }
         .section { display: none; animation: fadeIn 0.4s ease; }
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* --- CARDS Y FORMULARIOS --- */
-        .espn-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 15px; padding: 25px; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h1 { font-family: 'Big Shoulders Display', sans-serif; font-size: 4rem; margin: 0 0 30px 0; text-transform: uppercase; letter-spacing: 2px; }
+        .espn-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 15px; padding: 25px; margin-bottom: 25px; }
+        h1 { font-family: 'Big Shoulders Display', sans-serif; font-size: 4rem; margin: 0 0 30px 0; text-transform: uppercase; }
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 15px; }
-        input, select, textarea { background: #1a1a1a; border: 1px solid #333; padding: 15px; color: white; border-radius: 8px; width: 100%; box-sizing: border-box; font-weight: 700; transition: 0.3s; }
-        input:focus { border-color: var(--espn-red); outline: none; background: #222; }
+        input, select, textarea { background: #1a1a1a; border: 1px solid #333; padding: 15px; color: white; border-radius: 8px; width: 100%; box-sizing: border-box; font-weight: 700; }
         
         .btn-espn { background: var(--espn-red); color: white; border: none; padding: 18px 30px; border-radius: 8px; font-weight: 900; text-transform: uppercase; cursor: pointer; transition: 0.3s; width: 100%; }
         .btn-espn:hover { transform: scale(1.02); box-shadow: 0 0 20px rgba(230,0,0,0.4); }
+        .btn-danger { background: transparent; border: 1px solid #ff4444; color: #ff4444; margin-top: 10px; padding: 10px; font-size: 0.7rem; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; }
+        .btn-danger:hover { background: #ff4444; color: white; }
 
         /* --- DISEÑO DE PARTIDOS (2 COLUMNAS) --- */
-        .jornada-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px; }
+        .jornada-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px; padding-bottom: 50px; }
         .label-dia { color: var(--espn-red); font-family: 'Big Shoulders Display', sans-serif; font-size: 2.5rem; display: block; border-bottom: 2px solid var(--espn-red); margin-bottom: 20px; padding-bottom: 5px; }
 
         .match-card {
@@ -55,35 +56,24 @@
             gap: 12px;
             animation: cardAppear 0.5s ease-out forwards;
             opacity: 0;
-            position: relative;
-            transition: 0.3s;
-        }
-        .match-card:hover { background: #1a1a1a; transform: translateX(5px); }
-
-        @keyframes cardAppear {
-            from { opacity: 0; transform: translateX(-30px); }
-            to { opacity: 1; transform: translateX(0); }
         }
 
-        .teams { font-weight: 900; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; justify-content: space-between; }
-        .vs { color: var(--espn-red); font-size: 0.8rem; margin: 0 10px; opacity: 0.7; }
+        @keyframes cardAppear { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+
+        .teams { font-weight: 900; font-size: 1.2rem; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
+        .vs { color: var(--espn-red); font-size: 0.8rem; margin: 0 10px; }
         .details { font-size: 0.85rem; color: #888; font-weight: 700; display: flex; gap: 10px; align-items: center; }
         .cancha-badge { background: #333; color: white; padding: 3px 10px; border-radius: 4px; font-size: 0.75rem; text-transform: uppercase; }
 
-        /* --- BOTONES DE ACCIÓN --- */
-        .btn-delete { background: none; border: 1px solid #444; color: #666; cursor: pointer; padding: 5px 10px; border-radius: 5px; transition: 0.3s; font-size: 0.8rem; }
+        .btn-delete { background: none; border: 1px solid #444; color: #666; cursor: pointer; padding: 5px 10px; border-radius: 5px; transition: 0.3s; }
         .btn-delete:hover { background: #ff4444; color: white; border-color: #ff4444; }
 
         /* --- MODAL URGENTE --- */
         #modal-urgente { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
         .modal-content { background: #111; border: 3px solid var(--urgent); padding: 40px; border-radius: 20px; max-width: 500px; text-align: center; position: relative; }
-        .modal-content h2 { font-family: 'Big Shoulders Display', sans-serif; font-size: 3rem; color: var(--urgent); margin: 0; }
         .close-modal { position: absolute; top: 15px; right: 20px; font-size: 2rem; cursor: pointer; color: white; }
 
-        /* --- RESPONSIVO --- */
-        @media (max-width: 900px) {
-            .jornada-grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 900px) { .jornada-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -92,8 +82,8 @@
         <div class="modal-content">
             <span class="close-modal" onclick="cerrarModal()">&times;</span>
             <div style="font-size: 3rem; margin-bottom: 10px;">⚠️</div>
-            <h2 id="modal-titulo">ALERTA DE LIGA</h2>
-            <p id="modal-texto" style="font-size: 1.2rem; margin: 25px 0; line-height: 1.6; color: #ccc;"></p>
+            <h2 id="modal-titulo" style="font-family:'Big Shoulders Display'; color:var(--urgent); font-size:3rem; margin:0"></h2>
+            <p id="modal-texto" style="font-size: 1.2rem; margin: 25px 0; color: #ccc;"></p>
             <button class="btn-espn" onclick="cerrarModal()" style="background:var(--urgent); color:black">ENTENDIDO</button>
         </div>
     </div>
@@ -103,22 +93,18 @@
         <div class="nav-link active" onclick="showSection('anuncios')">Comunicados</div>
         <div class="nav-link" onclick="showSection('partidos')">Programación</div>
         <div class="nav-link" onclick="showSection('sanciones')">Disciplina</div>
-        <div class="nav-link" onclick="cerrarSesion()" style="margin-top:auto; font-size:0.7rem; opacity:0.4; letter-spacing: 1px;">LOGOUT SYSTEM</div>
+        <div class="nav-link" onclick="cerrarSesion()" style="margin-top:auto; font-size:0.7rem; opacity:0.4;">LOGOUT</div>
     </nav>
 
     <main>
         <div id="anuncios" class="section active">
             <h1>News Center</h1>
             <div class="espn-card">
-                <h3>Publicar Nuevo Mensaje</h3>
                 <input type="text" id="titulo-aviso" placeholder="TITULO DEL AVISO" style="margin-bottom:12px">
-                <textarea id="contenido-aviso" placeholder="ESCRIBE LOS DETALLES AQUÍ..." style="height: 100px; resize: none;"></textarea>
+                <textarea id="contenido-aviso" placeholder="DETALLES..." style="height: 80px; resize: none;"></textarea>
                 <div style="margin-top:15px; display: flex; gap: 15px;">
-                    <select id="tipo-aviso" style="flex: 1;">
-                        <option value="normal">Noticia Estándar</option>
-                        <option value="urgente">⚠️ AVISO URGENTE (POP-UP)</option>
-                    </select>
-                    <button class="btn-espn" onclick="guardarAviso()" style="flex: 1;">Lanzar Noticia</button>
+                    <select id="tipo-aviso"><option value="normal">Noticia</option><option value="urgente">⚠️ Urgente</option></select>
+                    <button class="btn-espn" onclick="guardarAviso()">Publicar</button>
                 </div>
             </div>
             <div id="lista-anuncios"></div>
@@ -127,35 +113,20 @@
         <div id="partidos" class="section">
             <h1>Agenda Semanal</h1>
             <div class="espn-card">
-                <h3>Registrar Encuentro</h3>
                 <div class="form-grid">
-                    <input type="text" id="local" placeholder="Equipo Local">
-                    <input type="text" id="visita" placeholder="Equipo Visita">
-                    <select id="cancha">
-                        <option value="Central">Cancha Central</option>
-                        <option value="1">Cancha 1</option><option value="2">Cancha 2</option>
-                        <option value="3">Cancha 3</option><option value="4">Cancha 4</option>
-                        <option value="5">Cancha 5</option><option value="6">Cancha 6</option>
-                        <option value="7">Cancha 7</option>
-                    </select>
+                    <input type="text" id="local" placeholder="Local">
+                    <input type="text" id="visita" placeholder="Visita">
+                    <select id="cancha"><option value="Central">Central</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select>
                     <input type="time" id="hora">
-                    <select id="dia">
-                        <option value="Sábado">Sábado</option>
-                        <option value="Domingo">Domingo</option>
-                    </select>
+                    <select id="dia"><option value="Sábado">Sábado</option><option value="Domingo">Domingo</option></select>
                 </div>
-                <button class="btn-espn" id="btn-guardar-partido">Subir al Calendario Oficial</button>
+                <button class="btn-espn" id="btn-guardar-partido">Publicar Partido</button>
+                <button class="btn-danger" onclick="limpiarJornadaCompleta()">⚠️ BORRAR TODA LA JORNADA</button>
             </div>
 
             <div class="jornada-grid">
-                <div>
-                    <span class="label-dia">SÁBADO</span>
-                    <div id="lista-sabado"></div>
-                </div>
-                <div>
-                    <span class="label-dia">DOMINGO</span>
-                    <div id="lista-domingo"></div>
-                </div>
+                <div><span class="label-dia">SÁBADO</span><div id="lista-sabado"></div></div>
+                <div><span class="label-dia">DOMINGO</span><div id="lista-domingo"></div></div>
             </div>
         </div>
 
@@ -165,20 +136,10 @@
                 <div class="form-grid">
                     <input type="text" id="jugador-san" placeholder="Jugador">
                     <input type="text" id="equipo-san" placeholder="Equipo">
-                    <input type="text" id="rep-san" placeholder="Representante">
-                    <select id="estado-san">
-                        <option value="activa">Activa</option>
-                        <option value="pendiente">Pendiente</option>
-                        <option value="urgente">Urgente</option>
-                    </select>
-                    <select id="cat-san">
-                        <option value="Varonil">Varonil</option>
-                        <option value="Femenil">Femenil</option>
-                        <option value="Juvenil">Juvenil</option>
-                    </select>
-                    <input type="text" id="motivo-san" placeholder="Sanción / Jornadas">
+                    <select id="estado-san"><option value="activa">Activa</option><option value="pendiente">Pendiente</option></select>
+                    <input type="text" id="motivo-san" placeholder="Sanción">
                 </div>
-                <button class="btn-espn" onclick="guardarSancion()">Registrar Castigo</button>
+                <button class="btn-espn" onclick="guardarSancion()">Registrar</button>
             </div>
             <div id="lista-sanciones"></div>
         </div>
