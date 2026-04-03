@@ -92,9 +92,9 @@ async function guardarAviso() {
     const tipo = document.getElementById('tipo-aviso');
 
     const { error } = await _supabase.from('anuncios').insert([{ 
-        Titulo: titulo.value, 
-        Contenido: contenido.value, 
-        Tipo: tipo.value 
+        titulo: titulo.value, 
+        contenido: contenido.value, 
+        tipo: tipo.value 
     }]);
 
     if(!error) {
